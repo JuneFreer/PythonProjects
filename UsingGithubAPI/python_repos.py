@@ -29,6 +29,7 @@ for repo_dict in repo_dicts:
     plot_dict = {
         'value': repo_dict['stargazers_count'], #键'value'存储了星数
         'label': repo_dict['description'] or '', #键'label'存储了项目描述, 描述可能为空(没写)
+        'xlink': repo_dict['html_url'],
     }
     plot_dicts.append(plot_dict) #将字典plot_dict append到plot_dicts
 
