@@ -15,16 +15,23 @@ print("Total repositories:", response_dict['total_count']) # GitHub总共包含�
 repo_dicts = response_dict['items']
 print("Repositories returned:", len(repo_dicts)) # 获悉我们获得了多少个仓库的信息
 
+
 # 研究第一个仓库
 repo_dict = repo_dicts[0] # 提取repo_dicts中的第一个字典（第一个仓库）
 print("\nKeys:", len(repo_dict)) # 看看第一个仓库中有多少信息
 # for key in sorted(repo_dict.keys()): # 我们打印这个字典的所有键，看看其中包含哪些信息
 #     print(key)
 
-names, stars = [], []
+names, plot_dicts = [], []
 for repo_dict in repo_dicts:
     names.append(repo_dict['name'])
-    stars.append(repo_dict['stargazers_count'])
+    #对于每个项目，我们都创建了字典plot_dict
+    plot_dict = {
+        'value': repo_dict['stargazers_count'], #键'value'存储了星数
+        'label': repo_dict['description'] or '', #键'label'存储了项目描述, 描述可能为空(没写)
+    }
+    plot_dicts.append(plot_dict) #将字典plot_dict append到plot_dicts
+
 
 # 可视化
 my_style = LS('#333366', base_style=LCS)
@@ -40,20 +47,10 @@ chart = pygal.Bar(style=my_style, x_label_rotation=45, show_legend=False)
 # my_config.width = 1000
 #
 #
-# chart = pygal.Bar(my_config, style=my_style) # 创建条形图对象
+# chart = pygal.Bar(my_config, style=my_style)  创建条形图对象
 chart.title = 'Python Projects'
-chart.x_labels = ['httpie', 'django', 'flask']
-
-# 字典列表
-plot_dicts = [
-    {'value': 45709, 'label': 'Description of httpie.'},
-    {'value': 47044, 'label': 'Description of django.'},
-    {'value': 48752, 'label': 'Description of flask.'},
-]
+chart.x_labels = names
 
 
 chart.add('', plot_dicts) # 向add()传递一个字典列表，而不是值列表
-chart.render_to_file('bar_descriptions.svg')
-
-# 处理结果
-print(response_dict.keys())
+chart.render_to_file('python_repos.svg')
